@@ -1,0 +1,43 @@
+#include <Arduino.h>
+
+#define SERVO_PIN 3  
+
+
+
+void setup() {
+  pinMode(SERVO_PIN, OUTPUT); 
+
+  TCCR2A = (1 << WGM21) | (1 << WGM20) | (1 << COM2B1); 
+  TCCR2B = (1 << CS21) | (1 << CS22); 
+
+  int PRES = 256;
+  int TT = PRES/16;
+
+  int PW0 = 900; //0도때 pw
+  int PW180 = 2100; // 180때 pw
+
+  int ang_des; //원하는 값 작성... 여기다 하는건지 loop에다 하는건지는 흠...
+
+  int tick0 = PW0/TT; //우선 보류
+  int tick180 = PW180/TT; //우선 보류
+
+  int tick0 = 33;  // 0때 측정한 tick 
+  int tick180 = 143;  // 180때 측정한 tick
+
+  int ticks_des = tick_calc(0, 180, tick0, tick180, ang_des); //원하는 각에 필요한 tick을 읽어준다
+}
+
+int tick_calc(int x0, int x1, int y0, int y1, int x) {
+  return y0 + ((x - x0) * (y1 - y0))/ (x1 - x0);
+}
+
+void loop() {
+
+// 원하는 각도로 돌아가게끔 해야되는데... 아직 수정 필요
+  OCR2B = 143; 
+  delay(2000);
+
+
+  OCR2B = 33;
+  delay(2000);
+}
