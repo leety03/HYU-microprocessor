@@ -18,8 +18,8 @@ void setup() {
 
   int ang_des; //원하는 값 작성... 여기다 하는건지 loop에다 하는건지는 흠...
 
-  int tick0 = PW0/TT; //우선 보류
-  int tick180 = PW180/TT; //우선 보류
+  int calc_tick0 = PW0/TT; //우선 보류
+  int calc_tick180 = PW180/TT; //우선 보류
 
   int tick0 = 33;  // 0때 측정한 tick 
   int tick180 = 143;  // 180때 측정한 tick
