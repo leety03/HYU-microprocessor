@@ -5,6 +5,8 @@
 void setup() {
   pinMode(SERVO_PIN, OUTPUT); 
 
+  Serial.begin(9600);
+
   TCCR2A = (1 << WGM21) | (1 << WGM20) | (1 << COM2B1);
   TCCR2B = (1 << CS21) | (1 << CS22); 
 
@@ -23,6 +25,11 @@ void loop() {
   for (int i = 0; i < 7; i++) {
     int angle = angles[i];
     int desired_tick = tick_calc(0, 180, tick0, tick180, angle);
+
+    Serial.print("Angle: ");
+    Serial.print(angle);
+    Serial.print(" degrees, Tick: ");
+    Serial.println(desired_tick);
 
     OCR2B = desired_tick;
 
