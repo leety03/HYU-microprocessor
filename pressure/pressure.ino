@@ -1,33 +1,36 @@
 #define SERVO_PIN 3  
-volatile uint16_t value = 0;
+volatile uint16_t pressure = 0;
 
-int tick_calc(int x0, int x1, int y0, int y1, int x) {
-  return y0 + ((x - x0) * (y1 - y0))/ (x1 - x0);
-}
-
-int tick0 = 33;  // 0때 측정한 tick 
-int tick180 = 143;  // 180때 측정한 tick
 
 //ADC interrupt
 ISR (ADC_vect){
-  value = ADC;
+  pressure = ADC;
+}
+
+//tick 값 계산
+int tick_calc(int x){
+  int tick0 = 33;  // 0때 측정한 tick 
+  int tick180 = 143;  // 180때 측정한 tick
+  int x0 = 0;
+  int x1 = 180;
+  return tick0 + ((x - x0) * (tick180 - tick0))/ (x1 - x0);
 }
 
 void brake(){
-  //테스트 용도 angle
+  //테스트 용도 random angle (IMU에서 가져올 것)
   int angle = random(0,91);
   Serial.print("angle: ");
   Serial.print(angle);
 
-  if (angle > 10){
-    int desired_tick = tick_calc(0, 180, tick0, tick180, angle);
-    OCR2B = desired_tick;
+  if (angle > 10){ // 일정 각도 이상에서
+    int desired_tick = tick_calc(angle); // tick 계산 
     Serial.print("desired_tick: ");
     Serial.print(desired_tick);
+    OCR2B = desired_tick; // 값 입력(브레이크 작동)
     Serial.println("brake activated");
   }
   else{
-    Serial.println("not activated");
+    Serial.println("not activated"); //일정 각도 이하 -> 브레이크 작동X
   }
 }
 
@@ -49,15 +52,15 @@ void setup(){
   SREG |= 0x01 << SREG_I;
   ADCSRA |= (1 << ADSC);
 
-  //SERVO
+  //SERVO setting
   pinMode(SERVO_PIN, OUTPUT);
   TCCR2A = (1 << WGM21) | (1 << WGM20) | (1 << COM2B1); 
   TCCR2B = (1 << CS21) | (1 << CS22);  
 }
  
 void loop(){
-  Serial.print(value);
-  if (value != 0){
+  Serial.print(pressure);
+  if (pressure != 0){ //압력 센서 값
     brake();
   }
   delay(100);
