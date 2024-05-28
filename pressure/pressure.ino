@@ -1,5 +1,11 @@
 volatile uint16_t value = 0;
 
+//ADC interrupt
+ISR (ADC_vect){
+  value = ADC;
+}
+
+
 void setup(){
   Serial.begin(9600);
   ADMUX |= (0 << REFS1) | (1 << REFS0);
@@ -8,15 +14,16 @@ void setup(){
 
   ADCSRA |= (1 << ADATE);
   ADCSRA |= (1 << ADEN);
+  ADCSRA |= (1 << ADIE);
   ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 
   ADCSRB |= (0 << ADTS0) |(0 << ADTS1) |(0 << ADTS0);
 
+  SREG |= 0x01 << SREG_I;
   ADCSRA |= (1 << ADSC);
 }
  
 void loop(){
-  value = ADC;
   Serial.println(value);
-  
+
 }
