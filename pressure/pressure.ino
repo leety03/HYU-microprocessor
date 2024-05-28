@@ -5,6 +5,9 @@ ISR (ADC_vect){
   value = ADC;
 }
 
+void brake(){
+  Serial.println("brake activated");
+}
 
 void setup(){
   Serial.begin(9600);
@@ -25,5 +28,8 @@ void setup(){
  
 void loop(){
   Serial.println(value);
-
+  if (value != 0){
+    brake();
+  }
+  delay(100);
 }
