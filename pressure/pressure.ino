@@ -1,12 +1,21 @@
 volatile uint16_t value = 0;
 
+
 //ADC interrupt
 ISR (ADC_vect){
   value = ADC;
 }
 
 void brake(){
-  Serial.println("brake activated");
+  //테스트 용도 angle
+  int angle = random(0,91);
+
+  if (angle > 10){
+    Serial.println("brake activated");
+  }
+  else{
+    Serial.println("not activated");
+  }
 }
 
 void setup(){
