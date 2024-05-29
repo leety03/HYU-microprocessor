@@ -1,11 +1,9 @@
 #define SERVO_PIN 3  
 volatile uint16_t pressure = 0;
-volatile bool newpressure = false;
 
 //ADC interrupt
 ISR (ADC_vect){
   pressure = ADC;
-  newpressure = true; //새로운 값 읽힘
 }
 
 //tick 값 계산
@@ -60,11 +58,8 @@ void setup(){
 }
  
 void loop(){
-  if (newpressure){
-    Serial.print(pressure);
-    if (pressure != 0){ //압력 센서 값
+  Serial.print(pressure);
+  if (pressure == 0){ //압력 센서 값
     brake();
-    }
   }
-  delay(100);
 }
