@@ -1,5 +1,6 @@
 #define SERVO_PIN 3  
 volatile uint16_t pressure = 0;
+int brake_angle = 30;
 
 //ADC interrupt
 ISR (ADC_vect){
@@ -22,7 +23,7 @@ void brake(){
   Serial.print(angle);
 
   if (angle > 10){ // 일정 각도 이상에서
-    int desired_tick = tick_calc(angle); // tick 계산 
+    int desired_tick = tick_calc(brake_angle); // tick 계산 
     Serial.print("desired_tick: ");
     Serial.print(desired_tick);
     OCR2B = desired_tick; // 값 입력(브레이크 작동)
